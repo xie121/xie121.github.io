@@ -69,5 +69,5 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: http://github.com/xie121/xie121.github.io.git
+  repository: https://gh_token@github.com/xie121/xie121.github.io.git
   branch: master

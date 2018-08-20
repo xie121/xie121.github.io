@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="网络协议是啥？网络协议其实跟生活非常贴近，我们上网浏览新闻，聊天都跟它息息相关。但是因为网络协议众多，又特别抽象，对于很多非计算机专业的人来说，很难入门。很多大神推荐我看各种关于TCPIP的经典名著，说实话，每个字我都看得懂，但是合起来就蒙圈了。因此，结合生活例子，形象化的理解网络协议就特别重要。我写这系列文章的初衷是希望通过非技术视角，给出关于网络协议更接地气的解释，帮助更多小伙伴入门。
+不懂计">
+<meta property="og:type" content="article">
+<meta property="og:title" content="白话网络协议（一）">
+<meta property="og:url" content="http://yoursite.com/2018/05/01/cjgxiya1j0000779k7dnvwlv5/index.html">
+<meta property="og:site_name" content="恺龙说">
+<meta property="og:description" content="网络协议是啥？网络协议其实跟生活非常贴近，我们上网浏览新闻，聊天都跟它息息相关。但是因为网络协议众多，又特别抽象，对于很多非计算机专业的人来说，很难入门。很多大神推荐我看各种关于TCPIP的经典名著，说实话，每个字我都看得懂，但是合起来就蒙圈了。因此，结合生活例子，形象化的理解网络协议就特别重要。我写这系列文章的初衷是希望通过非技术视角，给出关于网络协议更接地气的解释，帮助更多小伙伴入门。
+不懂计">
+<meta property="og:image" content="http://yoursite.com/images/180506tcpip封装.png">
+<meta property="og:updated_time" content="2018-05-06T13:19:15.862Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="白话网络协议（一）">
+<meta name="twitter:description" content="网络协议是啥？网络协议其实跟生活非常贴近，我们上网浏览新闻，聊天都跟它息息相关。但是因为网络协议众多，又特别抽象，对于很多非计算机专业的人来说，很难入门。很多大神推荐我看各种关于TCPIP的经典名著，说实话，每个字我都看得懂，但是合起来就蒙圈了。因此，结合生活例子，形象化的理解网络协议就特别重要。我写这系列文章的初衷是希望通过非技术视角，给出关于网络协议更接地气的解释，帮助更多小伙伴入门。
+不懂计">
+<meta name="twitter:image" content="http://yoursite.com/images/180506tcpip封装.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/01/cjgxiya1j0000779k7dnvwlv5/"/>
+
+
+
+
+
+  <title>白话网络协议（一） | 恺龙说</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">恺龙说</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kailong Xie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../../../images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="恺龙说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">白话网络协议（一）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-01T00:00:00+08:00">
+                2018-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="网络协议是啥？"><a href="#网络协议是啥？" class="headerlink" title="网络协议是啥？"></a>网络协议是啥？</h3><p>网络协议其实跟生活非常贴近，我们上网浏览新闻，聊天都跟它息息相关。但是因为网络协议众多，又特别抽象，对于很多非计算机专业的人来说，很难入门。很多大神推荐我看各种关于TCPIP的经典名著，说实话，每个字我都看得懂，但是合起来就蒙圈了。因此，结合生活例子，形象化的理解网络协议就特别重要。我写这系列文章的初衷是希望通过非技术视角，给出关于网络协议更接地气的解释，帮助更多小伙伴入门。</p>
+<h3 id="不懂计算机网络-那先来发明一个互联网吧！"><a href="#不懂计算机网络-那先来发明一个互联网吧！" class="headerlink" title="不懂计算机网络? 那先来发明一个互联网吧！"></a>不懂计算机网络? 那先来发明一个互联网吧！</h3><p>我们驾驶着时光机回到了1960年，看着一台台巨无霸型的“个人电脑”，作为伟大的先（yi）知（yin）者，准备开始发明互联网，来连接这一台台电脑。我们想了一个法子：用一条条电线将电脑连接到一个黑盒子里，我们寄希望于这个伟大的黑盒子能帮助我们传递消息。我们迫不及待地打开电脑，想用Facebook发条状态，宣告我们伟大发明的诞生。咦，奇怪，怎么发不出去呢？计算机就像是一个个小婴儿一样，我们得教会他们行为、礼仪。比如如何去和其他计算机沟通交流，在不同场合需要注意些什么，并且把行为礼仪深深的印在他们脑海里。</p>
+<p>因此，我们展开了一场盛大的互联网大会，会议中展开了热烈而富有成效的讨论，得出了结论：计算机之间的互相通信，每台计算机都要用相同的办法。比如如何探测到通信目标、由哪一边发起、使用何种语言进行沟通，如何结束通信等等。我们还考虑到了不同硬件、操作系统间的通信。因此我们一致同意，需要定制一系列的规则，统称为协议（protocol）。  </p>
+<p>协议中存在格式各样的内容，从电缆的规格到IP地址的选定办法、查找异地用户的方法、双方建立通讯的顺序，以及Web页面显示需要处理的步骤等等。我们很厉害有木有！我们给了这些互联网相关的协议集合一个酷炫的名称 - TCP/IP。那么有了这么多牛逼轰轰的协议，我们的消息又是怎么发出去的呢？</p>
+<h3 id="TCP-IP的分层"><a href="#TCP-IP的分层" class="headerlink" title="TCP/IP的分层"></a>TCP/IP的分层</h3><p>TCP/IP 分为4层：应用层、传输层、网络层和数据链路层。为什么这么分呢？从事IT行业的小伙伴比较清楚，如果不分层，整个互联网只有一个协议，我们某个地方需要改动，就需要把整个协议替换掉，而如果进行分层，只需定义好各层的接口，以后如果有改动只需要改动相应的层即可。其次，每个层的角色也相对单一些，大大减少了设计的复杂度。</p>
+<p>虽然我们为TCP/IP的4层取了牛逼哄哄的名字，我们借鉴了邮局寄信的逻辑。这里我们举个例子。</p>
+<h3 id="应用层"><a href="#应用层" class="headerlink" title="应用层"></a>应用层</h3><blockquote>
+<p>产品经理小陈与程序员小徐是好基友，经常互相写信互诉衷肠。小陈有一天想小徐了，就写了一封满怀思念之情的信，但是小徐只看得懂中文，因此小陈还很贴心的标注了下，该文全程中文，无任何英文装逼词汇，最后画了一个小爱心后，把信装进信封里。</p>
+</blockquote>
+<p>对于小陈来说，他关心的是信本身，但是没有信封、邮票，信就寄不出去。比如我们发出去的QQ信息，浏览的HTML内容，都属于应用数据。在网络中，我们想要发消息，也需要信封、邮票等等，而这些就是所谓的协议了。</p>
+<p>我们在封装信后，填写信息，往往都是有步骤的，比如先填写收件人地址，和发件人地址，再填写收件人名称、寄件人名称等等。在网络协议中，也是类似的，先会封装应用层协议，再封装传输层协议，再封装网络层协议，最后给到链路层。</p>
+<p>应用层作用就是定义信内容格式，它通过各种协议来规范数据格式(小陈标注了他是中文写的)，使程序方便识别。应用层常用协议有：DNS、HTTP、FTP、TELNET、SMTP等，这些协议规定了数据的格式，如json、txt、html等。收发双方都要遵循相同的协议格式进行数据传输。</p>
+<h3 id="网络层"><a href="#网络层" class="headerlink" title="网络层"></a>网络层</h3><blockquote>
+<p>小陈开始写上信封的信息，写上了收件人地址，和发件人地址。</p>
+</blockquote>
+<p>在计算机网络里，这个是网络层做的事情。收信人对应数据包里IP头部中的<code>目的ip地址</code>，寄件人对应数据包里IP头部中的<code>源ip地址</code>，写上寄信、收信两个地址就可以保证信件可以邮寄到目的地了。</p>
+<h3 id="传输层"><a href="#传输层" class="headerlink" title="传输层"></a>传输层</h3><blockquote>
+<p>小陈开始填写收件人名称、寄件人名称。</p>
+</blockquote>
+<p>小陈填写的这些信息可以理解为TCP协议（传输层）的头部数据。因此同一个地址，可能住了很多人，通过定义端口，确认主机上应用程序的身份，就可以将数据包交给对应的应用程序。</p>
+<p>我们回顾下，在信封里包含的信息：</p>
+<blockquote>
+<blockquote>
+<p>邮编：200000<br>收件人：小徐<br>发往：上海市金沙江路1038号<br>寄件人：小陈<br>寄自：上海市奉贤区</p>
+</blockquote>
+</blockquote>
+<p>这张图摘自于<code>图解HTTP</code>,可以很清楚了解到在互联网中，发送一条消息时，时如何像封装一层层信息，来保证传输的。<br><img src="/images/180506tcpip封装.png" alt=""></p>
+<blockquote>
+<p>小陈把信扔进信箱，过了几天，小徐就收到这封信了。</p>
+</blockquote>
+<h3 id="消息如何传送？"><a href="#消息如何传送？" class="headerlink" title="消息如何传送？"></a>消息如何传送？</h3><p>信寄出去，会有人去信箱拿信，然后带到邮局，再进行分发。那计算机网络是如何把数据包传输到目的地的？比如我们的电脑在生成数据包时，明明输入的是一个域名，电脑是怎么知道对方电脑的IP地址的？（<code>涉及到了DNS协议</code>）。网络中的邮局又是谁呢？（<code>涉及到了网关</code>），网关又是如何帮我们把数据包传输到目的地的？（<code>各种路由协议</code>）</p>
+<p>这些信息可以在<a href="http://kailong.me/2018/05/05/20180505-%E7%99%BD%E8%AF%9D%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%EF%BC%88%E4%BA%8C%EF%BC%89" target="_blank" rel="external">白话网络协议（二）</a>中得到比较好的解答。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../05/cjgxiya1n0001779k4lmc3kka/" rel="prev" title="白话网络协议（二）">
+                白话网络协议（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Kailong Xie</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="../../../../archives/">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络协议是啥？"><span class="nav-number">1.</span> <span class="nav-text">网络协议是啥？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不懂计算机网络-那先来发明一个互联网吧！"><span class="nav-number">2.</span> <span class="nav-text">不懂计算机网络? 那先来发明一个互联网吧！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-IP的分层"><span class="nav-number">3.</span> <span class="nav-text">TCP/IP的分层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用层"><span class="nav-number">4.</span> <span class="nav-text">应用层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络层"><span class="nav-number">5.</span> <span class="nav-text">网络层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传输层"><span class="nav-number">6.</span> <span class="nav-text">传输层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息如何传送？"><span class="nav-number">7.</span> <span class="nav-text">消息如何传送？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kailong Xie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xie121',
+            repo: 'xie121.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '8d307d984037576771430116acae9651920af1a2',
+            
+                client_id: '469219787d3f7f001b87'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
