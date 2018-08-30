@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../../../../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../../../../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../../../../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../../../../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../../../../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../../../../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../../../../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="依稀记得我作为新人进入数字化营销领域，听到最多的一个话题就是用什么来追踪和识别用户。先聊聊iOS端，iOS设备ID有很多，通常用到的大概有以下六个，例如UDID、IMEI、ICCID、MEID、IDFA、MAC地址等，一台苹果手机的标识方式很多，不同标识方式又有不同的参数信息。随着iOS系统的升级，很多设备ID苹果禁止开发者获取，或者给用户诸多人性选择空间。下面详细说说参数的定位及用途，其中最为大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="漫谈营销ID体系(1) - IOS篇">
+<meta property="og:url" content="http://kailong.me/2018/05/15/cjlg798tb0005ydrlbhrblwhr/index.html">
+<meta property="og:site_name" content="恺龙说">
+<meta property="og:description" content="依稀记得我作为新人进入数字化营销领域，听到最多的一个话题就是用什么来追踪和识别用户。先聊聊iOS端，iOS设备ID有很多，通常用到的大概有以下六个，例如UDID、IMEI、ICCID、MEID、IDFA、MAC地址等，一台苹果手机的标识方式很多，不同标识方式又有不同的参数信息。随着iOS系统的升级，很多设备ID苹果禁止开发者获取，或者给用户诸多人性选择空间。下面详细说说参数的定位及用途，其中最为大">
+<meta property="og:updated_time" content="2018-08-30T06:39:24.119Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="漫谈营销ID体系(1) - IOS篇">
+<meta name="twitter:description" content="依稀记得我作为新人进入数字化营销领域，听到最多的一个话题就是用什么来追踪和识别用户。先聊聊iOS端，iOS设备ID有很多，通常用到的大概有以下六个，例如UDID、IMEI、ICCID、MEID、IDFA、MAC地址等，一台苹果手机的标识方式很多，不同标识方式又有不同的参数信息。随着iOS系统的升级，很多设备ID苹果禁止开发者获取，或者给用户诸多人性选择空间。下面详细说说参数的定位及用途，其中最为大">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kailong.me/2018/05/15/cjlg798tb0005ydrlbhrblwhr/"/>
+
+
+
+
+
+  <title>漫谈营销ID体系(1) - IOS篇 | 恺龙说</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">恺龙说</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kailong.me">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kailong Xie">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../../../../images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="恺龙说">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">漫谈营销ID体系(1) - IOS篇</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-15T00:00:00+00:00">
+                2018-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../../../../categories/计算广告/" itemprop="url" rel="index">
+                    <span itemprop="name">计算广告</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>依稀记得我作为新人进入数字化营销领域，听到最多的一个话题就是<code>用什么来追踪和识别用户</code>。先聊聊iOS端，iOS设备ID有很多，通常用到的大概有以下六个，例如UDID、IMEI、ICCID、MEID、IDFA、MAC地址等，一台苹果手机的标识方式很多，不同标识方式又有不同的参数信息。随着iOS系统的升级，很多设备ID苹果禁止开发者获取，或者给用户诸多人性选择空间。下面详细说说参数的定位及用途，其中最为大家关注的就是IDFA。</p>
+<a id="more"></a>
+<h2 id="标识符点将台"><a href="#标识符点将台" class="headerlink" title="标识符点将台"></a>标识符点将台</h2><h3 id="1-谁用谁知道-UDID"><a href="#1-谁用谁知道-UDID" class="headerlink" title="1 谁用谁知道 - UDID"></a>1 谁用谁知道 - UDID</h3><p><code>UDID(UniqueDevice Identifier)</code>是苹果iOS设备的唯一识别码，由40个字符的字母和数字组成。移动广告商往往需要通过UDID用来识别玩家、用户，并对用户活动进行跟踪;也经常会用于一台设备一个账号功能实现。</p>
+<p>iOS 6及以前系统是可以获取到设备的UDID，iOS 7中已经完全的禁用。</p>
+<h3 id="2-禁止我偏用-UDID-OpenUDID"><a href="#2-禁止我偏用-UDID-OpenUDID" class="headerlink" title="2 禁止我偏用 - UDID OpenUDID"></a>2 禁止我偏用 - UDID OpenUDID</h3><p>在Apple拒绝UDID后，OpenUDID作为独立于Apple的开源方案，被广大的开发者所接受，各大统计广告平台都从UDID等方案切换到OpenUDID的方案（看来大家都不想完全被Apple束缚啊），但不幸的事，同样由于iOS7对剪贴板的限制，导致同一个设备上应用间，无法再共享一个OpenUDID，即OpenUDID作为设备唯一标识的能力被大大削弱。也可以看到随着iOS7的来临，各广告平台都迅速更新自己的SDK，来切换到苹果的idfa的方案上来。</p>
+<h3 id="3-当前最广泛-IDFA"><a href="#3-当前最广泛-IDFA" class="headerlink" title="3 当前最广泛 - IDFA"></a>3 当前最广泛 - IDFA</h3><p><code>IDFA(Identifier for Advertising)</code>称为<code>广告标示符</code>，是苹果在iOS系统中给予App开发者用以标识iOS设备的一种身份参数。对广告主而言，IDFA最大的作用就是准确认识这个设备代表的用户，确认广告是否有效触达，避免将同一个广告重复投放造成预算浪费，同时进行真实性监测。而对整个广告行业来说，IDFA是形成数据链条的必须手段，广告网络、DSP和DMP都需要一个统一的设备数据身份核对标准。</p>
+<h3 id="4-一般不能用-IMEI"><a href="#4-一般不能用-IMEI" class="headerlink" title="4 一般不能用 - IMEI"></a>4 一般不能用 - IMEI</h3><p>IMEI(International Mobile Equipment Identity)是国际移动装备辨识码，是由15位数字组成的”电子串号”，它与每台移动电设备一一对应，而且该码是全世界唯一的。每一只移动电话机在组装完成后都将被赋予一个全球唯一的一组号码，这个号码从生产到交付使用都将被制造生产的厂商所记录。</p>
+<p>iOS 6及以后系统就不能正规获取IMEI，但可以通过私有API获取手机的IMEI号，一般苹果发现有通过私有API获取设备ID，上架时会予以拒绝。如果在线产品被发现会立马下架，2015年有米SDK下架风波就是因为通过私有API获取设备ID，触动了苹果的底线，导致一夜之间近300款应用被下架，其中不乏大产品。</p>
+<h3 id="5-分析最好用-IDFV"><a href="#5-分析最好用-IDFV" class="headerlink" title="5 分析最好用 - IDFV"></a>5 分析最好用 - IDFV</h3><p>说明：顾名思义，是给Vendor标识用户用的，每个设备在所属同一个Vender的应用里，都有相同的值。其中的Vender是指应用提供商，但准确点说，是通过BundleID的DNS反转的前两部分进行匹配，如果相同就是同一个Vender，例如对于com.somecompany.appone,com.somecompany.apptwo 这两个BundleID来说，就属于同一个Vender，共享同一个idfv的值。和idfa不同的是，idfv的值是一定能取到的，所以非常适合于作为内部用户行为分析的主id，来标识用户，替代OpenUDID。注意：如果用户将属于此Vender的所有App卸载，则idfv的值会被重置，即再重装此Vender的App，idfv的值和之前不同。</p>
+<h3 id="6-看你怎么用-Mac地址"><a href="#6-看你怎么用-Mac地址" class="headerlink" title="6 看你怎么用 - Mac地址"></a>6 看你怎么用 - Mac地址</h3><p>每一个网卡都有一个唯一的标识，即Mac地址，显然用来标识一个手机是绰绰有余的了，也有一些开源的方案也用到了它，国内UMTrack等也用它作为过主id，随着iOS7返回同样的值后，不得不退隐江湖。</p>
+<h2 id="渠道追踪与监测"><a href="#渠道追踪与监测" class="headerlink" title="渠道追踪与监测"></a>渠道追踪与监测</h2><p>在移动领域，分为两大阵营，<code>iOS（Apple）</code>和<code>安卓（Google）</code>。这两家发行渠道差异比较大。出现这种情况的原因在于 Google 官方应用商店 <code>Google Play</code> 在国内受制于<code>GFW(Great Fire Wall)</code> 一直处于无法使用的状态，所以国内的安卓 App 分发，都是依托数十个不同的应用市场或发行渠道，如百度、360、腾讯等互联网企业以及一加（<code>壮哉我大一加，一加六大家快点买起来 ！！！</code>）、小米、华为、魅族等手机生产商。对于安卓 App 的渠道追踪，主要是围绕上面这些大的渠道来进行。</p>
+<p>iOS 的发行渠道则与安卓有很大的不同，大部分用户的 App 都是从 App Store 下载的。iOS 的“渠道”其实通常是指那些在其它 App 或者网页内部，提供到 AppStore 的链接的页面。因此，在 iOS 中追踪发行渠道，主要是追踪进入 App Store 相关页面的渠道信息。</p>
+<h3 id="iOS几种跟踪方案对比"><a href="#iOS几种跟踪方案对比" class="headerlink" title="iOS几种跟踪方案对比"></a>iOS几种跟踪方案对比</h3><table>
+<thead>
+<tr>
+<th>应用市场</th>
+<th>跟踪方案</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>APP Store</td>
+<td>IDFA</td>
+<td>准确度高</td>
+<td>IDFA有可能被停用、系统重置可能会导致IDFA变更</td>
+</tr>
+<tr>
+<td>APP Store</td>
+<td>Cookie</td>
+<td>准确度高</td>
+<td>iOS9以上才适用；朋友圈公众号广告、朋友圈广告无法实现追踪</td>
+</tr>
+<tr>
+<td>APP Store</td>
+<td>模糊匹配</td>
+<td>准确度不确定</td>
+<td>准确性依赖于算法</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Cookie-追踪"><a href="#Cookie-追踪" class="headerlink" title="Cookie 追踪"></a>Cookie 追踪</h4><p>基于Cookie的方式，iOS 9中新增的<code>SFSafariViewController</code>，这个类的API允许在App内打开一个Safari浏览器，而不是一个App内部的Webview。这个App内的Safari和外面系统的Safari是同一个，共享同一个沙盒，可以操作同一个Cookie，也就是说它可以跨App与Safari实现共享Cookie。</p>
+<p>基于<code>SFSafariViewController</code>控件，当用户在App中通过它打开渠道页面时，我们可以将渠道信息写入Cookie中，并设置生效时间。当用户安装并激活 App后，再次使用<code>SFSafariViewController</code>上报激活信息，同时将Cookie中的渠道信息上传，通过匹配，便可确定下载来源。由于渠道信息保存在设备本地，因此匹配是100%准确的。</p>
+<p>但是基于<code>SFSafariViewController</code>这种方式也有一定的弊端：首先，这个方案只能支持iOS9及以上版本的设备，但覆盖了绝大部分用户，此外，对于目前业界主流的一些推广渠道，如微信、朋友圈，它们尚未在App中使用<code>SFSafariViewController</code>控件访问网页，因此这部分渠道也无法使用精准匹配的方案。</p>
+<h4 id="IDFA-追踪"><a href="#IDFA-追踪" class="headerlink" title="IDFA 追踪"></a>IDFA 追踪</h4><p>媒体的App（例如微信，这里就是媒体1，2,3），会详细记录哪个IDFA点击了待推广App（例如）的链接（或是在微信中嵌入SDK去记录），而聚美本身，也会记录具体的哪个IDFA激活了聚美App，两者都将记录下来的IDFA上传至指定的服务器，进行对比，即可确定下载来源。在用户不重置系统，不还原广告的情况下，这种方式精准度比较高。网页不支持这种形式。</p>
+<h4 id="模糊匹配"><a href="#模糊匹配" class="headerlink" title="模糊匹配"></a>模糊匹配</h4><p>模糊匹配，点击下载链接，会跳转到Appstore页面，这个过程会触发一个服务端的请求，服务器来记录这次点击的设备信息，包括ip地址、机型等。同时，被推广App这边，也可以记录用户激活App时机器的一些基本信息，并上传至服务器。结合下载和激活的时间差，再结合设备的IP地址和机型等信息，大概可以模糊地识别出同一个用户先点击了下载链接，再激活了App，从而确定下载渠道。这种方式的精确度取决于前后两次数据收集的完成程度和算法。</p>
+<h3 id="市场上几种主流工具对比"><a href="#市场上几种主流工具对比" class="headerlink" title="市场上几种主流工具对比"></a>市场上几种主流工具对比</h3><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>匹配方案</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Google Analytics</td>
+<td>IDFA</td>
+</tr>
+<tr>
+<td>Adobe Analytics</td>
+<td>模糊匹配</td>
+</tr>
+<tr>
+<td>Umeng</td>
+<td>模糊匹配</td>
+</tr>
+<tr>
+<td>GrowingIO</td>
+<td>IDFA-模糊匹配</td>
+</tr>
+<tr>
+<td>诸葛ID</td>
+<td>IDFA/IDFV</td>
+</tr>
+<tr>
+<td>神策</td>
+<td>Cookie + 模糊匹配</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../../05/cjlg798t40002ydrlj9a43fy3/" rel="next" title="白话网络协议（二）">
+                <i class="fa fa-chevron-left"></i> 白话网络协议（二）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../../18/cjlg798te0006ydrl6g4iyq8u/" rel="prev" title="机器学习日记 (一) 小目标">
+                机器学习日记 (一) 小目标 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Kailong Xie</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="../../../../archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#标识符点将台"><span class="nav-number">1.</span> <span class="nav-text">标识符点将台</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-谁用谁知道-UDID"><span class="nav-number">1.1.</span> <span class="nav-text">1 谁用谁知道 - UDID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-禁止我偏用-UDID-OpenUDID"><span class="nav-number">1.2.</span> <span class="nav-text">2 禁止我偏用 - UDID OpenUDID</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-当前最广泛-IDFA"><span class="nav-number">1.3.</span> <span class="nav-text">3 当前最广泛 - IDFA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-一般不能用-IMEI"><span class="nav-number">1.4.</span> <span class="nav-text">4 一般不能用 - IMEI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-分析最好用-IDFV"><span class="nav-number">1.5.</span> <span class="nav-text">5 分析最好用 - IDFV</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-看你怎么用-Mac地址"><span class="nav-number">1.6.</span> <span class="nav-text">6 看你怎么用 - Mac地址</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#渠道追踪与监测"><span class="nav-number">2.</span> <span class="nav-text">渠道追踪与监测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#iOS几种跟踪方案对比"><span class="nav-number">2.1.</span> <span class="nav-text">iOS几种跟踪方案对比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cookie-追踪"><span class="nav-number">2.1.1.</span> <span class="nav-text">Cookie 追踪</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IDFA-追踪"><span class="nav-number">2.1.2.</span> <span class="nav-text">IDFA 追踪</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#模糊匹配"><span class="nav-number">2.1.3.</span> <span class="nav-text">模糊匹配</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#市场上几种主流工具对比"><span class="nav-number">2.2.</span> <span class="nav-text">市场上几种主流工具对比</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kailong Xie</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../../../../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../../../../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../../../../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xie121',
+            repo: 'xie121.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '8d307d984037576771430116acae9651920af1a2',
+            
+                client_id: '469219787d3f7f001b87'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
